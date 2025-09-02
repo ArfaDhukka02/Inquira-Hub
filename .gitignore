@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.env
+*.sqlite3
+
+# Virtual environment
+venv/
+env/
+ENV/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# MySQL or database dumps (optional)
+*.sql
+*.dump
+
+# macOS / Windows system files
+.DS_Store
+Thumbs.db
