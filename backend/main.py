@@ -266,7 +266,13 @@ def vote(req: VoteRequest, authorization: str = Header(...)):
             )
             msg = "Vote recorded"
         conn.commit()
-        return {"message": msg}
+        # Return updated score
+        cursor.execute(
+            "SELECT COALESCE(SUM(value), 0) as score FROM votes WHERE target_type=%s AND target_id=%s",
+            (req.target_type, req.target_id)
+        )
+        new_score = cursor.fetchone()["score"]
+        return {"message": msg, "score": int(new_score)}
     finally:
         cursor.close()
         conn.close()

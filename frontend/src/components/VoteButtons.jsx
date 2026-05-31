@@ -3,7 +3,8 @@ import { vote } from "../api/api";
 import { isLoggedIn } from "../api/auth";
 
 export default function VoteButtons({ targetType, targetId, initialScore }) {
-    const [score, setScore] = useState(initialScore ?? 0);
+    const [score, setScore] = useState(Number(initialScore) ?? 0);
+    const [userVote, setUserVote] = useState(0);
     const [loading, setLoading] = useState(false);
 
     async function handleVote(value) {
@@ -13,9 +14,23 @@ export default function VoteButtons({ targetType, targetId, initialScore }) {
         }
         setLoading(true);
         try {
-            await vote(targetType, targetId, value);
-            // Optimistic: toggle off if same, otherwise apply
-            setScore((prev) => prev + value);
+            const result = await vote(targetType, targetId, value);
+            // Update userVote state
+            if (userVote === value) {
+                setUserVote(0);
+            } else {
+                setUserVote(value);
+            }
+            // Use score from backend if returned, otherwise adjust manually
+            if (result.score !== undefined) {
+                setScore(result.score);
+            } else {
+                setScore((prev) => {
+                    if (userVote === value) return prev - value;
+                    if (userVote === 0) return prev + value;
+                    return prev - userVote + value;
+                });
+            }
         } catch (e) {
             alert(e.message);
         } finally {
@@ -28,7 +43,8 @@ export default function VoteButtons({ targetType, targetId, initialScore }) {
             <button
                 onClick={() => handleVote(1)}
                 disabled={loading}
-                className="text-gray-400 hover:text-orange-500 transition text-xl leading-none disabled:opacity-40"
+                className={`transition text-xl leading-none disabled:opacity-40 ${userVote === 1 ? "text-orange-500" : "text-gray-400 hover:text-orange-500"
+                    }`}
                 title="Upvote"
             >
                 ▲
@@ -37,7 +53,8 @@ export default function VoteButtons({ targetType, targetId, initialScore }) {
             <button
                 onClick={() => handleVote(-1)}
                 disabled={loading}
-                className="text-gray-400 hover:text-blue-500 transition text-xl leading-none disabled:opacity-40"
+                className={`transition text-xl leading-none disabled:opacity-40 ${userVote === -1 ? "text-blue-500" : "text-gray-400 hover:text-blue-500"
+                    }`}
                 title="Downvote"
             >
                 ▼
