@@ -202,5 +202,5 @@ Then open `http://localhost:3000` in your browser.
 
 ## Built by
 
-https://github.com/ammarprasla
+https://github.com/ammarprasla, 
 https://github.com/ArfaDhukka02
