@@ -313,7 +313,7 @@ Provide a well-structured, accurate answer."""
                 "content-type": "application/json",
             },
             json={
-                "model": "claude-sonnet-4-20250514",
+                "model": "claude-sonnet-4-5",
                 "max_tokens": 1000,
                 "messages": [{"role": "user", "content": prompt}]
             },
@@ -321,7 +321,9 @@ Provide a well-structured, accurate answer."""
         )
  
     if response.status_code != 200:
-        raise HTTPException(status_code=500, detail="AI service error")
+        error_detail = response.json()
+        print(f"Anthropic API error: {response.status_code} - {error_detail}")
+        raise HTTPException(status_code=500, detail=f"AI service error: {error_detail}")
  
     ai_text = response.json()["content"][0]["text"]
  
