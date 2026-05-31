@@ -3,8 +3,17 @@ __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-*.env
+*.pyc
 *.sqlite3
+
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+*.env
+.env.local
+.env.production
 
 # Virtual environment
 venv/
@@ -26,3 +35,4 @@ ENV/
 # macOS / Windows system files
 .DS_Store
 Thumbs.db
+
